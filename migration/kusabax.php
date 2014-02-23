@@ -141,7 +141,7 @@
 		$log[] = 'Creating board: <strong>/' . $board['name'] . '/</strong>';
 		
 		// Go ahead and create this new board...
-		$query = prepare('INSERT INTO `boards` VALUES (NULL, :uri, :title, :subtitle)');
+		$query = prepare('INSERT INTO ``boards`` VALUES (NULL, :uri, :title, :subtitle)');
 		$query->bindValue(':uri', $board['name']);
 		$query->bindValue(':title', $board['desc']);
 		$query->bindValue(':subtitle', null, PDO::PARAM_NULL);
@@ -164,7 +164,7 @@
 		
 		$log[] = 'Replicating post <strong>' . $post['id'] . '</strong> on /' . $board . '/';
 		
-		$query = prepare(sprintf("INSERT INTO `posts_%s` VALUES
+		$query = prepare(sprintf("INSERT INTO ``posts_%s`` VALUES
 			(
 				:id, :thread, :subject, :email, :name, :trip, :capcode, :body, NULL, :time, :time, :thumb, :thumbwidth, :thumbheight, :file, :width, :height, :filesize, :filename, :filehash, :password, :ip, :sticky, :locked, 0, :embed
 			)", $board));
@@ -318,14 +318,14 @@
 	$k_query = $kusabax->query('SELECT * FROM `' . KU_DBPREFIX . 'front` WHERE `page` = 0');
 	while($news = $k_query->fetch()) {
 		// Check if already exists
-		$query = prepare("SELECT 1 FROM `news` WHERE `body` = :body AND `time` = :time");
+		$query = prepare("SELECT 1 FROM ``news`` WHERE `body` = :body AND `time` = :time");
 		$query->bindValue(':time', $news['timestamp'], PDO::PARAM_INT);
 		$query->bindValue(':body', $news['message'], PDO::PARAM_STR);
 		$query->execute() or error(db_error($query));
 		if($query->fetch())
 			continue;		
 		
-		$query = prepare("INSERT INTO `news` VALUES (NULL, :name, :time, :subject, :body)");
+		$query = prepare("INSERT INTO ``news`` VALUES (NULL, :name, :time, :subject, :body)");
 		$query->bindValue(':name', $news['poster'], PDO::PARAM_STR);
 		$query->bindValue(':time', $news['timestamp'], PDO::PARAM_INT);
 		$query->bindValue(':subject', $news['subject'], PDO::PARAM_STR);
