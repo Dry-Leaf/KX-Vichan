@@ -142,7 +142,7 @@
 		$log[] = 'Creating board: <strong>/' . $board['name'] . '/</strong>';
 		
 		// Go ahead and create this new board...
-		$query = prepare('INSERT INTO ``boards`` VALUES (NULL, :uri, :title, :subtitle)');
+		$query = prepare('INSERT INTO ``boards`` VALUES (:uri, :title, :subtitle)');
 		$query->bindValue(':uri', $board['name']);
 		$query->bindValue(':title', $board['desc']);
 		$query->bindValue(':subtitle', null, PDO::PARAM_NULL);
