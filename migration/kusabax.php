@@ -1,8 +1,9 @@
 ﻿<?php
 
 	/*
-	 * This is no longer supported with the latest Tinyboard version. Sorry for the inconvenience.
-	*/
+	 * WARNING: This code is untested. It may or may not work with the latest Tinyboard version.
+	 * Please drop by http://webchat.6irc.net/?channels=vichan-devel if you intend to use this code.
+	 */
 
 
 	set_time_limit(0);
