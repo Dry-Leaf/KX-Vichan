@@ -1,8 +1,13 @@
-# Tinyboard Tools
-This repository is a collection of management scripts, javascript addons, stylesheets, and miscellaneous tools for [Tinyboard](http://github.com/savetheinternet/Tinyboard).
+# Tinyboard Migration
+This repository used to be a collection of management scripts, javascript
+addons, stylesheets, and miscellaneous tools for
+[Tinyboard](http://github.com/savetheinternet/Tinyboard).
+
+Now, since everything, except ```migration/``` directory has been
+merged into the vichan-devel/Tinyboard package, this repository has
+been renamed to Tinyboard-Migration
 
 ## Directories
-*	```tools/``` -- Command-line management scripts for Tinyboard. These should not be publicly executable.
 *	```migration/``` -- Database migration scripts for other imageboards (very outdated and no longer working).
 
 ## License
