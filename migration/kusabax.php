@@ -2,6 +2,7 @@
 
 	/*
 	 * WARNING: This code is untested. It may or may not work with the latest Tinyboard version.
+	 * Doing backups beforehand is STRONGLY ADVISED.
 	 * Please drop by http://webchat.6irc.net/?channels=vichan-devel if you intend to use this code.
 	 */
 
