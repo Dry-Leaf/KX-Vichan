@@ -8,7 +8,7 @@
 
 
 	set_time_limit(0);
-	$kusabaxc = Array();
+	$kusabaxc = array();
 	
 	
 	/* Config */
@@ -96,13 +96,13 @@
 	}
 	
 	$step = isset($_GET['step']) ? round($_GET['step']) : 0;
-	$page = Array(
+	$page = array(
 		'config' => $config,
 		'title' => 'KusabaX Database Migration',
 		'body' => ''
 	);
 	
-	$log = Array();
+	$log = array();
 	
 	// Trick Tinyboard into opening the KusabaX databse instead
 	$__temp = $config['db'];
@@ -123,7 +123,7 @@
 	$boards = listBoards();
 	
 	// Copy boards table, briefly
-	$kusabax_boards = Array();
+	$kusabax_boards = array();
 	while($board = $k_query->fetch()) {
 		// For later use...
 		$kusabax_boards[(int)$board['id']] = $board['name'];
@@ -150,7 +150,7 @@
 		$query->execute() or error(db_error($query));
 		
 		// Posting table
-		query(Element('posts.sql', Array('board' => $board['name']))) or error(db_error());
+		query(Element('posts.sql', array('board' => $board['name']))) or error(db_error());
 		
 		// Set up board (create directories, etc.) by opening it
 		openBoard($board['name']);
