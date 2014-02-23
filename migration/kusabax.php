@@ -227,17 +227,10 @@
 			$query->bindValue(':thumbheight', null, PDO::PARAM_NULL);
 			
 			if($post['file_type'] == 'you') {
-				// youtube
-				
-				foreach($config['embedding'] as $embed) {
-					if(strpos($embed[0], 'youtube\.com') !== false) {
-						$embed_code = preg_replace($embed[0], $embed[1], 'http://youtube.com/watch?v=' . $post['file']);
-						$embed_code = str_replace('%%tb_width%%', $config['embed_width'], $embed_code);
-						$embed_code = str_replace('%%tb_height%%', $config['embed_height'], $embed_code);
+				// youtube				
+				$embed_code = 'http://youtube.com/watch?v=' . $post['file'];
 						
-						$query->bindValue(':embed', $embed_code, PDO::PARAM_STR);
-					}
-				}
+				$query->bindValue(':embed', $embed_code, PDO::PARAM_STR);
 			}
 		} else {
 			$query->bindValue(':file', $post['file'] . '.' . $post['file_type'], PDO::PARAM_STR);
