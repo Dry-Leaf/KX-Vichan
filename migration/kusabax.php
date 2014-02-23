@@ -332,6 +332,12 @@
 	foreach($log as &$l) {
 		$page['body'] .= $l . '<br/>';
 	}
+	$page['body'] .= '<hr><strong>Migration is successful. Inspect the error messages and '.
+			 'if you think something has gone wrong - reinstall Tinyboard and run '.
+			 'it again. Please consider recounting bumps using a '.
+			 '<code>tools/recount-bumps.php</code> command line script '
+			 '(from Tinyboard+vichan-devel, see <a href="https://github.com/vichan-'.
+			 'devel/Tinyboard/blob/master/tools/recount-bumps.php">link</a>).</strong>';
 	$page['body'] .= '</p></div>';
 	
 	echo Element('page.html', $page);
