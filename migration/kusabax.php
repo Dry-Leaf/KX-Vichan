@@ -155,7 +155,7 @@
 		openBoard($board['name']);
 	}
 	
-	$k_query = $kusabax->query('SELECT `' . KU_DBPREFIX . 'posts`.*, `' . KU_DBPREFIX . '`.`type` FROM `' . KU_DBPREFIX . 'posts` LEFT JOIN `' . KU_DBPREFIX . 'staff` ON `posterauthority` = `' . KU_DBPREFIX . 'staff`.`id` WHERE `IS_DELETED` = 0') or error(db_error($kusabax));
+	$k_query = $kusabax->query('SELECT `' . KU_DBPREFIX . 'posts`.*, `' . KU_DBPREFIX . 'staff`.`type` FROM `' . KU_DBPREFIX . 'posts` LEFT JOIN `' . KU_DBPREFIX . 'staff` ON `posterauthority` = `' . KU_DBPREFIX . 'staff`.`id` WHERE `IS_DELETED` = 0') or error(db_error($kusabax));
 	while($post = $k_query->fetch(PDO::FETCH_ASSOC)) {
 		if(!isset($kusabax_boards[(int)$post['boardid']])) {
 			// Board doesn't exist...
