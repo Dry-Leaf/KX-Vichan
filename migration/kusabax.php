@@ -24,7 +24,6 @@
 	require_once 'inc/display.php';
 	require_once 'inc/template.php';
 	require_once 'inc/database.php';
-	require_once 'inc/user.php';
 	
 	if(!isset($kusabaxc['config']) || empty($kusabaxc['config']))
 		error('Did you forget to configure the script?');
