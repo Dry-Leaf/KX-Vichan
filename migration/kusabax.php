@@ -20,11 +20,11 @@
 	/* End config */
 	
 	
-	require 'inc/functions.php';
-	require 'inc/display.php';
-	require 'inc/template.php';
-	require 'inc/database.php';
-	require 'inc/user.php';
+	require_once 'inc/functions.php';
+	require_once 'inc/display.php';
+	require_once 'inc/template.php';
+	require_once 'inc/database.php';
+	require_once 'inc/user.php';
 	
 	if(!isset($kusabaxc['config']) || empty($kusabaxc['config']))
 		error('Did you forget to configure the script?');
@@ -335,7 +335,7 @@
 	$page['body'] .= '<hr><strong>Migration is successful. Inspect the error messages and '.
 			 'if you think something has gone wrong - reinstall Tinyboard and run '.
 			 'it again. Please consider recounting bumps using a '.
-			 '<code>tools/recount-bumps.php</code> command line script '
+			 '<code>tools/recount-bumps.php</code> command line script '.
 			 '(from Tinyboard+vichan-devel, see <a href="https://github.com/vichan-'.
 			 'devel/Tinyboard/blob/master/tools/recount-bumps.php">link</a>).</strong>';
 	$page['body'] .= '</p></div>';
