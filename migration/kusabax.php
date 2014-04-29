@@ -1,9 +1,19 @@
 ﻿<?php
 
 	/*
-	 * WARNING: This code is untested. It may or may not work with the latest Tinyboard version.
+	 * WARNING: This code is not that well tested, but should mostly work.
+	 * - This code should work to migrate your KusabaX to Tinyboard-0.9.6
+	 * - This code should work to migrate your KusabaX to vichan-devel-4.0
+	 * - This code should work to migrate your KusabaX to vichan-4.5
+	 * - This code WILL NOT WORK to migrate your KusabaX to vichan-5.0
+	 *   - Migrate your KX to vichan-4.5 and then upgrade vichan-4.5 to 5.0.
+	 *
+	 * Thanks for ANGEL_ from Gurochan for help in testing this code.
+	 *
+	 * Original code by savetheinternet, fixed by czaks.
+	 *
 	 * Doing backups beforehand is STRONGLY ADVISED.
-	 * Please drop by http://webchat.6irc.net/?channels=vichan-devel if you intend to use this code.
+	 * Please drop by http://webchat.6irc.net/?channels=vichan-devel if you encounter any problems
 	 */
 
 
