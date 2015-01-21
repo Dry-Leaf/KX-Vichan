@@ -66,6 +66,7 @@
 	$kusabaxc['db']['user']		= KU_DBUSERNAME;
 	$kusabaxc['db']['password']	= KU_DBPASSWORD;
 	$kusabaxc['db']['database']	= KU_DBDATABASE;
+	$kusabaxc['db']['prefix']	= KU_DBPREFIX;
 	$kusabaxc['db']['dsn']		= '';
 	$kusabaxc['db']['timeout']	= 5;
 	$kusabaxc['db']['persistent']	= false;
