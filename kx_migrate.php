@@ -2,15 +2,13 @@
 
 	/*
 	 * WARNING: This code is not that well tested, but should mostly work.
-	 * - This code should work to migrate your KusabaX to Tinyboard-0.9.6
-	 * - This code should work to migrate your KusabaX to vichan-devel-4.0
-	 * - This code should work to migrate your KusabaX to vichan-4.5
-	 * - This code WILL NOT WORK to migrate your KusabaX to vichan-5.0
-	 *   - Migrate your KX to vichan-4.5 and then upgrade vichan-4.5 to 5.0.
+	 * - This code should work to migrate your KusabaX to vichan-devel/vichan Commit f3cb255
 	 *
 	 * Thanks for ANGEL_ from Gurochan for help in testing this code.
 	 *
 	 * Original code by savetheinternet, fixed by czaks.
+	 *
+	 * Then fixed by Dry-Leaf.
 	 *
 	 * Doing backups beforehand is STRONGLY ADVISED.
 	 * Please drop by http://webchat.6irc.net/?channels=vichan-devel if you encounter any problems

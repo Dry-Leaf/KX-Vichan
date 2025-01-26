@@ -1,3 +1,5 @@
+PHP script to migrate Kusaba-X to Vichan.
+
 # Tinyboard Migration
 This repository used to be a collection of management scripts, javascript
 addons, stylesheets, and miscellaneous tools for
