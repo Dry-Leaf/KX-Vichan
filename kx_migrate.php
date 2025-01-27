@@ -1,8 +1,7 @@
 ﻿<?php
-
 	/*
 	 * WARNING: This code is not that well tested, but should mostly work.
-	 * - This code should work to migrate your KusabaX to vichan-devel/vichan Commit f3cb255
+	 * - This code should work to migrate your KusabaX to vichan-5.1.5
 	 *
 	 * Thanks for ANGEL_ from Gurochan for help in testing this code.
 	 *
@@ -14,62 +13,82 @@
 	 * Please drop by http://webchat.6irc.net/?channels=vichan-devel if you encounter any problems
 	 */
 
+        error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+        ini_set('display_errors', 1);
+
+        echo "startin\n";
 
 	set_time_limit(0);
 	$kusabaxc = array();
-	
-	
+
+        $descriptorspec = [
+            0 => ['pipe', 'r'], // stdin
+            1 => ['pipe', 'w'], // stdout
+        ];
+
 	/* Config */
 	
 	// Path to KusabaX configuration file (config.php)
 	// Warning: This script will ignore anything past the first `require`. This is only a problem if you've extensively modified your config.php
-	$kusabaxc['config'] = '';
+	$kusabaxc['config'] = '../kx/config.php';
 	
 	/* End config */
-	
-	
+
+
+	define('TINYBOARD', true);
+
+	require_once 'inc/events.php';
 	require_once 'inc/functions.php';
-	require_once 'inc/display.php';
+	//require_once 'inc/display.php';
 	require_once 'inc/template.php';
 	require_once 'inc/database.php';
+
+	echo "imported php files\n";
 	
 	if(!isset($kusabaxc['config']) || empty($kusabaxc['config']))
 		error('Did you forget to configure the script?');
 	
 	if(!file_exists($kusabaxc['config']) || !is_readable($kusabaxc['config']))
 		error('Kusaba X config file doesn\'t exist or I can\'t read it.');
-	
-	$temp = tempnam($config['tmp'], 'kusabax');
-	
-	$raw_config = file_get_contents($kusabaxc['config']);
-	
-	// replace __FILE__ with the actual filename
-	$raw_config = str_replace('__FILE__', '\'' . addslashes(realpath($kusabaxc['config'])) . '\'', $raw_config);
-	
-	// remove anything after the first `require`
-	$raw_config = substr($raw_config, 0, strpos($raw_config, 'require KU_ROOTDIR'));
-	
-	file_put_contents($temp, $raw_config);
-	
-	// Load KusabaX config
-	require $temp;
-	
-	unlink($temp);
-	
-	if(KU_DBTYPE != 'mysql' && KU_DBTYPE != 'mysqli')
-		error('Database type <strong>' . KU_DBTYPE . '</strong> not supported!');
-	
-	$kusabaxc['db']['type']		= 'mysql';
-	$kusabaxc['db']['server']	= KU_DBHOST;
-	$kusabaxc['db']['user']		= KU_DBUSERNAME;
-	$kusabaxc['db']['password']	= KU_DBPASSWORD;
-	$kusabaxc['db']['database']	= KU_DBDATABASE;
-	$kusabaxc['db']['prefix']	= KU_DBPREFIX;
-	$kusabaxc['db']['dsn']		= '';
-	$kusabaxc['db']['timeout']	= 5;
-	$kusabaxc['db']['persistent']	= false;
-	
-	
+
+	$process = proc_open('python3 helper.py', $descriptorspec, $pipes);
+	if (is_resource($process)) {
+            fwrite($pipes[0], $kusabaxc['config']);
+            fclose($pipes[0]);
+
+	    $output = stream_get_contents($pipes[1]);
+	    $data = json_decode($output, true);
+	     
+	    fclose($pipes[1]);
+	    proc_close($process);
+
+	    $KU_DBTYPE = $data['type'];
+
+            if ($KU_DBTYPE != 'mysql' && $KU_DBTYPE != 'mysqli') {
+                error('Database type <strong>' . $KU_DBTYPE . '</strong> not supported!');
+            }
+            
+	    $kusabaxc['db']['type']	= 'mysql';
+	    
+	    $kusabaxc['db']['server']	= $data['host'];
+	    $kusabaxc['db']['user']	= $data['username'];
+	    $kusabaxc['db']['password']	= $data['password'];
+	    $kusabaxc['db']['database']	= $data['database'];
+	    $kusabaxc['db']['prefix']	= $data['prefix'];
+
+	    $kusabaxc['db']['dsn']	= '';
+	    $kusabaxc['db']['timeout']	= 5;
+	    $kusabaxc['db']['persistent'] = false;
+	};
+
+	define("KU_DBPREFIX", $kusabaxc['db']['prefix']);
+
+	echo "Done reading from python\n";
+
+	echo $kusabaxc['db']['password'] . " - PASSWORD\n";
+
+	echo $KU_DBTYPE . " - DBTYPE\n";
+
 	// KusabaX functions
 	function md5_decrypt($enc_text, $password, $iv_len = 16) {
 		$enc_text = base64_decode($enc_text);
