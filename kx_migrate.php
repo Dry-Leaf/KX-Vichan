@@ -28,21 +28,14 @@
 
 	/* Config */
 	
-	// Path to KusabaX configuration file (config.php)
-	// Warning: This script will ignore anything past the first `require`. This is only a problem if you've extensively modified your config.php
-	$kusabaxc['config'] = '../kx/config.php';
+	// Path to KusabaX's installation directory. Set based on values in (config.php)
+	define('KU_ROOTDIR', '../kx/');
+	define('KU_BOARDSDIR', KU_ROOTDIR);
+	$kusabaxc['config'] = KU_ROOTDIR . 'config.php';
 	
 	/* End config */
 
-
-	define('TINYBOARD', true);
-
-	require_once 'inc/events.php';
-	require_once 'inc/functions.php';
-	//require_once 'inc/display.php';
-	require_once 'inc/template.php';
-	require_once 'inc/database.php';
-
+        require 'inc/bootstrap.php';
 	echo "imported php files\n";
 	
 	if(!isset($kusabaxc['config']) || empty($kusabaxc['config']))
@@ -76,18 +69,16 @@
 	    $kusabaxc['db']['database']	= $data['database'];
 	    $kusabaxc['db']['prefix']	= $data['prefix'];
 
+	    define('KU_RANDOMSEED', $data['randomseed']);
+
 	    $kusabaxc['db']['dsn']	= '';
 	    $kusabaxc['db']['timeout']	= 5;
 	    $kusabaxc['db']['persistent'] = false;
 	};
 
-	define("KU_DBPREFIX", $kusabaxc['db']['prefix']);
+	define('KU_DBPREFIX', $kusabaxc['db']['prefix']);
 
 	echo "Done reading from python\n";
-
-	echo $kusabaxc['db']['password'] . " - PASSWORD\n";
-
-	echo $KU_DBTYPE . " - DBTYPE\n";
 
 	// KusabaX functions
 	function md5_decrypt($enc_text, $password, $iv_len = 16) {

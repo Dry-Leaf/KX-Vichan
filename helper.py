@@ -14,6 +14,7 @@ ku_dict = {
     "username": re.search(r"\$cf\['KU_DBUSERNAME'\]\s*=\s*'([^']+)", contents).group(1),
     "password": re.search(r"\$cf\['KU_DBPASSWORD'\]\s*=\s*'([^']+)", contents).group(1),
     "database": re.search(r"\$cf\['KU_DBDATABASE'\]\s*=\s*'([^']+)", contents).group(1),
+    "randomseed": re.search(r"\$cf\['KU_RANDOMSEED'\]\s*=\s*'([^']+)", contents).group(1),
 }
 
 dbprefix = re.search(r"\$cf\['KU_DBPREFIX'\]\s*=\s*'([^']+)", contents)
