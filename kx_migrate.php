@@ -2,6 +2,7 @@
 	/*
 	 * WARNING: This code is not that well tested, but should mostly work.
 	 * - This code should work to migrate your KusabaX to vichan-5.1.5
+	 * - Tested with PHP 8.3
 	 *
 	 * Thanks for ANGEL_ from Gurochan for help in testing this code.
 	 *
@@ -10,13 +11,12 @@
 	 * Then fixed by Dry-Leaf.
 	 *
 	 * Doing backups beforehand is STRONGLY ADVISED.
-	 * Please drop by http://webchat.6irc.net/?channels=vichan-devel if you encounter any problems
 	 */
 
         error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
         ini_set('display_errors', 1);
 
-        echo "startin\n";
+        echo "startin'\n";
 
 	set_time_limit(0);
 	$kusabaxc = array();
@@ -78,7 +78,7 @@
 
 	define('KU_DBPREFIX', $kusabaxc['db']['prefix']);
 
-	echo "Done reading from python\n";
+	echo "Done reading Kusaba-X config with python\n";
 
 	// KusabaX functions
 	function md5_decrypt($enc_text, $password, $iv_len = 16) {
@@ -122,7 +122,7 @@
 	
 	$log = array();
 	
-	// Trick Tinyboard into opening the KusabaX databse instead
+	// Trick Tinyboard into opening the KusabaX database instead
 	$__temp = $config['db'];
 	$config['db'] = $kusabaxc['db'];
 	
@@ -142,30 +142,27 @@
 	
 	// Copy boards table, briefly
 	$kusabax_boards = array();
+
+        echo "Creating tables in vichan's db.\n";
+	
 	while($board = $k_query->fetch()) {
+                //echo $board['name'] . ' - ' . $board['id'];
+    	
 		// For later use...
 		$kusabax_boards[(int)$board['id']] = $board['name'];
-		
-		$already_exists = false;
-		foreach($boards as &$_board) {
-			if($_board['uri'] == $board['name']) {
-				// Board already exists in Tinyboard...
-				$log[] = 'Board /' . $board['name'] . '/ already exists.';
-				$already_exists = true;
-				break;
-			}
-		}
-		if($already_exists)
-			continue;
-		
+				
 		$log[] = 'Creating board: <strong>/' . $board['name'] . '/</strong>';
+
+		//echo '\n2';
 		
 		// Go ahead and create this new board...
-		$query = prepare('INSERT INTO ``boards`` VALUES (:uri, :title, :subtitle)');
+		$query = prepare('REPLACE INTO ``boards`` VALUES (:uri, :title, :subtitle)');
 		$query->bindValue(':uri', $board['name']);
 		$query->bindValue(':title', $board['desc']);
 		$query->bindValue(':subtitle', null, PDO::PARAM_NULL);
 		$query->execute() or error(db_error($query));
+
+		//echo '3\n';
 		
 		// Posting table
 		query(Element('posts.sql', array('board' => $board['name']))) or error(db_error());
@@ -184,9 +181,9 @@
 		
 		$log[] = 'Replicating post <strong>' . $post['id'] . '</strong> on /' . $board . '/';
 		
-		$query = prepare(sprintf("INSERT INTO ``posts_%s`` VALUES
+		$query = prepare(sprintf("REPLACE INTO ``posts_%s`` VALUES
 			(
-				:id, :thread, :subject, :email, :name, :trip, :capcode, :body, NULL, :time, :time, :thumb, :thumbwidth, :thumbheight, :file, :width, :height, :filesize, :filename, :filehash, :password, :ip, :sticky, :locked, 0, :embed
+				:id, :thread, :subject, :email, :name, :trip, :capcode, :body, NULL, :time, :time, :files, :num_files, :filehash, :password, :ip, :sticky, :locked, :cycle, 0, :embed, :slug
 			)", $board));
 		
 		// Post ID
