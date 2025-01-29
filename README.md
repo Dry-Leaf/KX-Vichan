@@ -5,6 +5,8 @@ Place `kx_migrate.php` and `helper.py` into Vichan's root directory.
 
 Run `kx_migrate.php` by navigating to it in a web browser, or using `php kx_migrate.php`
 
+Rebuild everything with `mod.php`.
+
 # Tinyboard Migration
 This repository used to be a collection of management scripts, javascript
 addons, stylesheets, and miscellaneous tools for
