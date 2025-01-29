@@ -183,7 +183,7 @@
 		
 		$query = prepare(sprintf("REPLACE INTO ``posts_%s`` VALUES
 			(
-				:id, :thread, :subject, :email, :name, :trip, :capcode, :body, NULL, :time, :time, :files, :num_files, :filehash, :password, :ip, :sticky, :locked, :cycle, 0, :embed, :slug
+				:id, :thread, :subject, :email, :name, :trip, :capcode, :body, NULL, :time, :bump, :files, :num_files, :filehash, :password, :ip, :sticky, :locked, 0, 0, :embed, NULL
 			)", $board));
 		
 		// Post ID
@@ -218,49 +218,35 @@
 		$embed_code = false;
 		
 		// File
-		if(empty($post['file']) || $post['file'] == 'removed') {
-			if($post['file'] == 'removed')
-				$query->bindValue(':file', 'deleted', PDO::PARAM_STR);
-			else
-				$query->bindValue(':file', null, PDO::PARAM_NULL);
-			$query->bindValue(':width', null, PDO::PARAM_NULL);
-			$query->bindValue(':height', null, PDO::PARAM_NULL);
-			$query->bindValue(':filesize', null, PDO::PARAM_NULL);
-			$query->bindValue(':filename', null, PDO::PARAM_NULL);
+		if(empty($post['file']) || $post['file'] == 'removed' || ($post['file_size'] == 0 && empty($post['file_md5']))) {
+			$query->bindValue(':num_files', 0, PDO::PARAM_INT);
+    		
+			$query->bindValue(':files', null, PDO::PARAM_NULL);
 			$query->bindValue(':filehash', null, PDO::PARAM_NULL);
-			$query->bindValue(':thumb', null, PDO::PARAM_NULL);
-			$query->bindValue(':thumbwidth', null, PDO::PARAM_NULL);
-			$query->bindValue(':thumbheight', null, PDO::PARAM_NULL);
-		} elseif($post['file_size'] == 0 && empty($post['file_md5'])) {
-			// embed
-			$query->bindValue(':file', null, PDO::PARAM_NULL);
-			$query->bindValue(':width', null, PDO::PARAM_NULL);
-			$query->bindValue(':height', null, PDO::PARAM_NULL);
-			$query->bindValue(':filesize', null, PDO::PARAM_NULL);
-			$query->bindValue(':filename', null, PDO::PARAM_NULL);
-			$query->bindValue(':filehash', null, PDO::PARAM_NULL);
-			$query->bindValue(':thumb', null, PDO::PARAM_NULL);
-			$query->bindValue(':thumbwidth', null, PDO::PARAM_NULL);
-			$query->bindValue(':thumbheight', null, PDO::PARAM_NULL);
-			
-			if($post['file_type'] == 'you') {
+
+		        if($post['file_size'] == 0 && empty($post['file_md5']) && $post['file_type'] == 'you') {	
 				// youtube				
 				$embed_code = 'http://youtube.com/watch?v=' . $post['file'];
-						
 				$query->bindValue(':embed', $embed_code, PDO::PARAM_STR);
-			}
+		        }
 		} else {
-			$query->bindValue(':file', $post['file'] . '.' . $post['file_type'], PDO::PARAM_STR);
-			$query->bindValue(':width', $post['image_w'], PDO::PARAM_INT);
-			$query->bindValue(':height', $post['image_h'], PDO::PARAM_INT);
-			$query->bindValue(':filesize', $post['file_size'], PDO::PARAM_INT);
-			$query->bindValue(':filename', $post['file_original'] . '.' . $post['file_type'], PDO::PARAM_STR);
+			$query->bindValue(':num_files', 1, PDO::PARAM_INT);
+
+			$data = [
+    			    "file" => $post['file'] . '.' . $post['file_type'],
+    			    "thumb" => $post['file'] . '.' . $post['file_type'],
+    			    "filename" => $post['file_original'] . $post['file_type'],
+    			    "size" => $post['file_size'],
+    			    "width" => $post['image_w'],
+    			    "height"=> $post['image_h'],
+    			    "thumbwidth" => $post['thumb_w'],
+    			    "thumbheight" => $post['thumb_h']
+    			];
+			
+			$query->bindValue(':files', json_encode($data), PDO::PARAM_STR);
+			
 			// They use MD5; we use SHA1 by default.
 			$query->bindValue(':filehash', null, PDO::PARAM_NULL);
-			
-			$query->bindValue(':thumb', $post['file'] . '.' . $post['file_type'], PDO::PARAM_STR);
-			$query->bindValue(':thumbwidth', $post['thumb_w'], PDO::PARAM_INT);
-			$query->bindValue(':thumbheight', $post['thumb_h'], PDO::PARAM_INT);
 			
 			// Copy file
 			$file_path = KU_BOARDSDIR . $board . '/src/' . $post['file'] . '.' . $post['file_type'];
