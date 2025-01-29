@@ -183,7 +183,7 @@
 		
 		$query = prepare(sprintf("REPLACE INTO ``posts_%s`` VALUES
 			(
-				:id, :thread, :subject, :email, :name, :trip, :capcode, :body, NULL, :time, :bump, :files, :num_files, :filehash, :password, :ip, :sticky, :locked, 0, 0, :embed, NULL
+				:id, :thread, :subject, :email, :name, :trip, :capcode, :body, NULL, :time, :bump, :files, :num_files, NULL, :password, :ip, :sticky, :locked, 0, 0, :embed, NULL
 			)", $board));
 		
 		// Post ID
@@ -222,7 +222,7 @@
 			$query->bindValue(':num_files', 0, PDO::PARAM_INT);
     		
 			$query->bindValue(':files', null, PDO::PARAM_NULL);
-			$query->bindValue(':filehash', null, PDO::PARAM_NULL);
+			//$query->bindValue(':filehash', null, PDO::PARAM_NULL);
 
 		        if($post['file_size'] == 0 && empty($post['file_md5']) && $post['file_type'] == 'you') {	
 				// youtube				
@@ -243,10 +243,9 @@
     			    "thumbheight" => $post['thumb_h']
     			];
 			
-			$query->bindValue(':files', json_encode($data), PDO::PARAM_STR);
+			$query->bindValue(':files', '[' . json_encode($data) . ']', PDO::PARAM_STR);
 			
-			// They use MD5; we use SHA1 by default.
-			$query->bindValue(':filehash', null, PDO::PARAM_NULL);
+			//$query->bindValue(':filehash', $post['file_md5'], PDO::PARAM_NULL);
 			
 			// Copy file
 			$file_path = KU_BOARDSDIR . $board . '/src/' . $post['file'] . '.' . $post['file_type'];
@@ -335,10 +334,7 @@
 	}
 	$page['body'] .= '<hr><strong>Migration is successful. Inspect the error messages and '.
 			 'if you think something has gone wrong - reinstall Tinyboard and run '.
-			 'it again. Please consider recounting bumps using a '.
-			 '<code>tools/recount-bumps.php</code> command line script '.
-			 '(from Tinyboard+vichan-devel, see <a href="https://github.com/vichan-'.
-			 'devel/Tinyboard/blob/master/tools/recount-bumps.php">link</a>).</strong>';
+			 'it again.</strong>';
 	$page['body'] .= '</p></div>';
 	
 	echo Element('page.html', $page);
